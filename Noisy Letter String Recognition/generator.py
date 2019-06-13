@@ -32,10 +32,15 @@ class TTIGenerator:
 
         return im_string
 
+    def add_noise(self, image, mu=0, sigma=1):
+        noise = np.random.normal(mu, sigma, image.shape)
+        return np.round(image + noise)
+
 
 if __name__ == '__main__':
     gen = TTIGenerator('images')
     image = gen.text_to_image('A_________B__CAB___A')
+    image = gen.add_noise(image)
     plt.imshow(image, cmap='gray')
     plt.savefig('image.png')
 

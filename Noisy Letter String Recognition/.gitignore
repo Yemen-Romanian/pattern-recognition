@@ -1,3 +1,4 @@
 # Don't track conent of these folders
 
 images/
+__pycache__

@@ -26,5 +26,7 @@ class LPSolver:
             i = i - self.graph.alphabet[self.graph.mapping[label]].shape[1]
 
         min_path_weight = np.min(self.graph.vertex_weights[-1, :])
+        print('Minimum path weight: {}'.format(min_path_weight))
+        print('Recognized string: {}'.format(result))
         return result, min_path_weight
 

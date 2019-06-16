@@ -10,7 +10,7 @@ class TTIGenerator:
         self.im_width = 28
 
         self.path_to_images = path_to_images
-        self.alphabet = {letter: 255 - plt.imread(os.path.join(path_to_images, letter, '{}.png'.format(font)))
+        self.alphabet = {letter: 255 - np.round(255*plt.imread(os.path.join(path_to_images, letter, '{}.png'.format(font))))
                          for letter in os.listdir(path_to_images)}
         self.alphabet['_'] = 255 * np.ones((self.im_height, 1))
 
@@ -32,16 +32,11 @@ class TTIGenerator:
 
         return im_string
 
-    def add_noise(self, image, mu=0, sigma=1):
-        noise = np.random.normal(mu, sigma, image.shape)
-        return np.round(image + noise)
+    def add_noise(self, image, epsilon):
+        mask = np.random.rand(*image.shape) < epsilon
+        noise = np.random.randint(0, 255, image.shape)
+        image[mask] = noise[mask]
+        return image
 
-
-if __name__ == '__main__':
-    gen = TTIGenerator('images')
-    image = gen.text_to_image('A_________B__CAB___A')
-    image = gen.add_noise(image)
-    plt.imshow(image, cmap='gray')
-    plt.savefig('image.png')
 
 

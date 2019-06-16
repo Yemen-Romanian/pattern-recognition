@@ -18,3 +18,9 @@ For running project such modules for `python 3` are necessary:
 - `numpy`
 - `matplotlib`
 - `argparse`
+
+## Some examples of results
+![](example_images/image_0.1.png)
+![](example_images/image_0.3.png)
+![](example_images/image_0.5.png)
+![](example_images/image_0.8.png)

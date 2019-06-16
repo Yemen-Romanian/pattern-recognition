@@ -2,6 +2,15 @@ import numpy as np
 
 
 class Graph:
+    """Class that specifies graph.
+
+    Graph is an object that consists of vertices and edges.
+    We can divide it into several objects, each object contains as many vertices
+    as the number of letters in alphabet.
+    We assign label to each vertex, in out case letters.
+    For each vertex and edge we can assign a weight.
+    We represent graph as a matrix of vertex weights and 4-dimensional array for edge weights.
+    """
 
     def __init__(self, alphabet, string):
         self.alphabet = alphabet

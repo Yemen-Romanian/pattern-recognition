@@ -25,20 +25,19 @@ opt_penalties = pd.DataFrame(data=opt_penalties,
 
 
 def levenshtein_distance(x, y):
-    dists = np.zeros((len(y), len(x)))
-    dists[0, 0] = 0
+    dists = np.zeros((len(y) + 1, len(x) + 1))
     
     for i in range(1, dists.shape[0]):
-        dists[i, 0] = dists[i-1, 0] + opt_penalties.loc['#', y[i]]
+        dists[i, 0] = dists[i-1, 0] + opt_penalties.loc['#', y[i-1]]
 
     for j in range(1, dists.shape[1]):
-        dists[0, j] = dists[0, j-1] + opt_penalties.loc[x[j], '#']
+        dists[0, j] = dists[0, j-1] + opt_penalties.loc[x[j-1], '#']
 
-    for i in range(1, len(y)):
-        for j in range(1, len(x)):
-            dists[i, j] = min(dists[i-1, j] + opt_penalties.loc['#', y[i]],
-                              dists[i, j-1] + opt_penalties.loc[x[j], '#'],
-                              dists[i-1, j-1] + opt_penalties.loc[x[j], y[i]])
+    for i in range(1, len(y) + 1):
+        for j in range(1, len(x) + 1):
+            dists[i, j] = min(dists[i-1, j] + opt_penalties.loc['#', y[i-1]],
+                              dists[i, j-1] + opt_penalties.loc[x[j-1], '#'],
+                              dists[i-1, j-1] + opt_penalties.loc[x[j-1], y[i-1]])
 
     return dists[-1, -1]
 

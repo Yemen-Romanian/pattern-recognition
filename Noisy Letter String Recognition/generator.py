@@ -4,12 +4,20 @@ import matplotlib.pyplot as plt
 
 
 class TTIGenerator:
+    """Class for text string to image string conversion.
+
+    Also allows to add noise.
+
+    """
 
     def __init__(self, path_to_images, font=1):
+        # hardcoded values for now, will fix this later
         self.im_height = 28
         self.im_width = 28
 
         self.path_to_images = path_to_images
+
+        # alphabet contains ('letter': letter_image) pairs
         self.alphabet = {letter: 255 - np.round(255*plt.imread(os.path.join(path_to_images, letter, '{}.png'.format(font))))
                          for letter in os.listdir(path_to_images)}
         self.alphabet['_'] = 255 * np.ones((self.im_height, 1))
@@ -33,6 +41,7 @@ class TTIGenerator:
         return im_string
 
     def add_noise(self, image, epsilon):
+        # 'salt and pepper' noise
         mask = np.random.rand(*image.shape) < epsilon
         noise = np.random.randint(0, 255, image.shape)
         image[mask] = noise[mask]

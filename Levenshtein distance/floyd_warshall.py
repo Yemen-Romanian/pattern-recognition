@@ -11,7 +11,4 @@ def floyd_warshall(incidence_mat):
 
     return dist
 
-if __name__ == '__main__':
-    mat = np.array([[0,2,2], [10,0,4], [5,9,0]])
-    print(floyd_warshall(mat))
             

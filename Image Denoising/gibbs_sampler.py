@@ -7,6 +7,19 @@ from graph import (
 import numpy as np
 
 def sample_pixel(i, j, image, labels, eps, beta):
+    """Sample pixel from conditional probability distribution.
+    
+    Arguments:
+        i {int} -- row coordinate of pixel
+        j {int} -- column coordinate of pixel
+        image {numpy.ndarray} -- image
+        labels {list} -- list of all labels ([0, 1] for black and white images)
+        eps {float} -- noise parameter
+        beta {float} -- edge cost parameter
+    
+    Returns:
+        int -- sampled pixel
+    """
     probs = []
     neighbour_pxls = neighbours(image, i, j)
     for label in labels:

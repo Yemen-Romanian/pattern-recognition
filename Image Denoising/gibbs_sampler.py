@@ -6,15 +6,15 @@ from graph import (
 )
 import numpy as np
 
-def sample_pixel(i, j, image, labels):
+def sample_pixel(i, j, image, labels, eps, beta):
     probs = []
+    neighbour_pxls = neighbours(image, i, j)
     for label in labels:
         pixel = Pixel(i, j, label)
-        pxl_cost = pixel_cost(pixel, label)
-        neighbour_pxls = neighbours(image, pixel)
+        pxl_cost = pixel_cost(pixel, image[i, j], eps)
         neighbours_costs = []
         for neighbour in neighbour_pxls:
-            neighbours_costs += [edge_cost(pixel, neighbour)]
+            neighbours_costs += [edge_cost(pixel, neighbour, beta)]
 
         probs.append(np.exp(-pxl_cost - np.sum(neighbours_costs)))
 
@@ -23,10 +23,10 @@ def sample_pixel(i, j, image, labels):
     return sampled_pixel
 
 
-def step(image, labels):
+def step(image, labels, eps, beta):
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
-            image[i, j] = sample_pixel(i, j, image, labels)
+            image[i, j] = sample_pixel(i, j, image, labels, eps, beta)
 
     return image
 

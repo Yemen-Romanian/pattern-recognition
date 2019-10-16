@@ -13,8 +13,7 @@ def edge_cost(pixel1, pixel2, beta=0.7):
     else:
         return 0
 
-def neighbours(image, pixel):
-    i, j, _ = pixel
+def neighbours(image, i, j):
     padding = (-1) * np.ones(
         (image.shape[0] + 2, 
          image.shape[1] + 2)

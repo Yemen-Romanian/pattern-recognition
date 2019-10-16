@@ -34,16 +34,19 @@ def main(settings_file):
     )
 
     print('Starting sampling...')
-    frequences = np.zeros(input_image.shape)
+    zero_frequences = np.zeros(input_image.shape)
+    ones_frequences = np.zeros(input_image.shape)
     j = 0
     for i in range(sampling_iter):
-        input_image = step(input_image, labels)
+        input_image = step(input_image, labels, eps, beta)
         if i > drop and i % save_step == 0:
-            frequences += np.logical_xor(input_image, np.ones(input_image.shape))
+            zero_frequences += np.logical_xor(input_image, np.ones(input_image.shape))
+            ones_frequences += np.logical_xor(input_image, np.zeros(input_image.shape))
             j += 1
 
-    result_image = frequences < (j // 2) * np.ones(frequences.shape)
+    result_image = ones_frequences > zero_frequences
     plt.imshow(result_image, cmap='gray')
+    plt.title('Result image')
     plt.savefig('result')
 
     

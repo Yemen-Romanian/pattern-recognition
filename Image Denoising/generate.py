@@ -12,11 +12,10 @@ def generate_image(
         size=size
     )
 
+    for _ in range(gen_iter):
+        image = step(image, labels, eps, beta)
 
-    for i in range(gen_iter):
-        image = step(image, labels)
-
-    noise = np.random.rand(*image.shape) < eps
+    noise = (np.random.rand(*image.shape) < eps).astype(int)
     noised_image = np.logical_xor(image, noise)
 
     plt.imshow(image, cmap='gray')

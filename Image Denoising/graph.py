@@ -1,43 +1,30 @@
 from math import log
 from collections import namedtuple
-from generate import generate_image
+import numpy as np
 
-Pixel = namedtuple("Pixel", "i j")
+Pixel = namedtuple("Pixel", "i j label")
 
-class ImageGraph:
-    def __init__(self, image, eps=0.1, beta=0.7):
-        self.image = image
-        self.eps = eps
-        self.beta = beta
+def pixel_cost(pixel, label, eps=0.1):
+    return -log(eps) if pixel.label != label else -log(1 - eps)
 
-    def pixel_cost(self, pixel, label):
-        return -log(self.eps) if self.image[pixel.i, pixel.j] != label else -log(1 - self.eps)
+def edge_cost(pixel1, pixel2, beta=0.7):
+    if pixel1.label != pixel2.label:
+        return beta
+    else:
+        return 0
 
-    def edge_cost(self, pixel1, pixel2):
-        if self.image[pixel1.i, pixel1.j] != self.image[pixel2.i, pixel2.j]:
-            return self.beta
-        else:
-            return 0
+def neighbours(image, pixel):
+    i, j, _ = pixel
+    padding = (-1) * np.ones(
+        (image.shape[0] + 2, 
+         image.shape[1] + 2)
+    )
+    padding[1:-1, 1:-1] = image
+    neighbours = [Pixel(i + 1, j, padding[i + 1, j]), 
+                    Pixel(i, j + 1, padding[i, j + 1]),
+                    Pixel(i + 1, j + 2, padding[i + 1, j + 2]),
+                    Pixel(i + 2, j + 1, padding[i + 2, j + 1])]
 
-    def neighbours(self, pixel):
-        i, j = pixel
-        if i == 0:
-            if j == 0:
-                neighbours_list = [Pixel(i+1, j), (i, j + 1)] 
-            elif j == self.image.shape[1] - 1:
-                neighbours_list = [Pixel(i, j-1), Pixel(i + 1, j)] 
-            else:
-                neighbours_list = [Pixel(i, j - 1), Pixel(i+1, j), Pixel(i, j + 1)]
-        elif i == self.image.shape[0] - 1:
-            if j == 0:
-                neighbours_list = [Pixel(i - 1, j), Pixel(i, j + 1)]
-            elif j == self.image.shape[1] - 1:
-                neighbours_list = [Pixel(i - 1, j), Pixel(i, j - 1)]
-            else:
-                neighbours_list = [Pixel(i, j - 1), Pixel(i - 1, j), Pixel(i, j + 1)]
-        else:
-            neighbours_list = [Pixel(i - 1, j), Pixel(i, j - 1), Pixel(i + 1, j), Pixel(i, j + 1)]
-
-        return neighbours_list
-
-    
+    neighbours = list(filter(lambda x: x.label != -1, neighbours))
+    neighbours = [Pixel(x.i - 1, x.j - 1, x.label) for x in neighbours]
+    return neighbours
